@@ -21,6 +21,13 @@ The file is [`60fps-splitscreen/cheats/158C0C7399AABD7B.txt`](60fps-splitscreen/
 
 ## Install
 
+Download a ready-made zip from the [latest release](https://github.com/Palawizard/mk8dx-60fps-splitscreen/releases/latest):
+
+- `mk8dx-60fps-splitscreen-<version>-emulators.zip` holds the `60fps-splitscreen` mod folder, for Eden, the other yuzu forks and Ryujinx.
+- `mk8dx-60fps-splitscreen-<version>-atmosphere.zip` holds the `atmosphere` folder, to extract at the root of the SD card.
+
+You can also copy the file from this repository by hand.
+
 ### Eden, Citron, Sudachi and other yuzu forks
 
 1. Right-click Mario Kart 8 Deluxe in the game list and pick **Open Mod Data Location**.
@@ -37,7 +44,7 @@ The file is [`60fps-splitscreen/cheats/158C0C7399AABD7B.txt`](60fps-splitscreen/
 
 ### Atmosphère (Switch)
 
-Copy the `cheats` folder from `60fps-splitscreen` to `/atmosphere/contents/0100152000022000/` on the SD card. The file should end up at `/atmosphere/contents/0100152000022000/cheats/158C0C7399AABD7B.txt`.
+Extract the Atmosphère zip at the root of the SD card, or copy the `cheats` folder from `60fps-splitscreen` to `/atmosphere/contents/0100152000022000/` by hand. The file should end up at `/atmosphere/contents/0100152000022000/cheats/158C0C7399AABD7B.txt`.
 
 Atmosphère turns on every cheat in the file when the game starts. Hold L while launching the game to start it without cheats.
 
