@@ -8,7 +8,7 @@ The code is written for **version 4.0.1** only:
 |---|---|---|---|
 | Mario Kart 8 Deluxe | `0100152000022000` | 4.0.1 | `158C0C7399AABD7B` |
 
-It uses the Atmosphère cheat format, which Eden, Citron, Sudachi and the other yuzu forks read, as do Ryujinx and Atmosphère on a modded Switch. It has been tested on Eden. It has not been tested on a real console.
+It uses the Atmosphère cheat format, which Eden, Citron, Sudachi and the other yuzu forks read, as do Ryujinx and Atmosphère on a modded Switch. It has been tested on Eden only, not on Ryujinx or a real console.
 
 ## The code
 
@@ -45,7 +45,7 @@ Atmosphère turns on every cheat in the file when the game starts. Hold L while 
 
 The cheat does nothing on another version, because the file name has to match the build ID of the game's main executable.
 
-- Eden and other yuzu forks write it to the log when the game starts: look for `name=main` in `eden_log.txt` (or `yuzu_log.txt`). If the log says `No cheats file found` next to `158C0C7399AABD7B`, the file is in the wrong folder.
+- Eden and other yuzu forks write it to the log when the game starts: look for `name=main` in `eden_log.txt` (or `yuzu_log.txt`). If the log says `No cheats file found` next to `158C0C7399AABD7B` and no other line loads it, the file is in the wrong folder.
 - Ryujinx shows the build ID at the top of the **Manage Cheats** window.
 
 For older versions of the game, [switch-cheats-db](https://github.com/HamletDuFromage/switch-cheats-db/blob/master/cheats/0100152000022000.json) has the `3-4 player 60 FPS` code for several earlier builds.
@@ -56,13 +56,18 @@ Untick the add-on (yuzu forks), disable the cheat in Manage Cheats (Ryujinx), or
 
 ## How it works
 
-The cheat writes one instruction in the game's main executable. At `main + 0xAFEE98`, the function that handles the 3-4 player frame rate compares a value with 2 and jumps to its end when they differ (`b.ne`, `54000FE1`). The cheat replaces that conditional jump with an unconditional one (`b`, `1400007F`), so the function always exits before the 30 FPS limit is applied.
+The cheat writes one instruction in the game's main executable. At `main + 0xAFEE98`, a function compares a value with 2 and jumps to its end when they differ (`b.ne`, `54000FE1`). The cheat replaces that conditional jump with an unconditional one (`b`, `1400007F`), so the function always returns early, and with it the 30 FPS cap in 3-4 player races goes away.
 
-This is the same patch as the earlier `3-4 player 60 FPS` codes. To port it to a later update, dump the decompressed main executable (in Eden: **Dump Decompressed NSOs** in the debug settings), search the `.text` section for `54000FE1` right after a compare with 2 (`cmp w8, #2` in 4.0.1), and use that offset in the code. The file name is the first 16 hex characters of the new build ID.
+This is the same patch as the earlier `3-4 player 60 FPS` codes. To port it to a later update:
+
+1. Dump the decompressed main executable. In Eden, tick **Dump Decompressed NSOs** in the debug settings and start the game once; the file lands in `dump/0100152000022000/nso/`.
+2. Search it for the bytes `E1 0F 00 54` (the instruction is stored little-endian) right after a compare with 2 (`cmp w8, #2` in 4.0.1).
+3. Eden's dump starts with the 0x100-byte NSO header, so subtract 0x100 from the file offset to get the offset to put in the code.
+4. Name the file after the first 16 hex characters of the new build ID.
 
 ## Credits
 
-The 60 FPS patch for Mario Kart 8 Deluxe was first made by [theboy181](https://linktr.ee/theboy181). It was ported to later updates by B3711, b0rd2dEAth and Craftyawesome, whose codes are collected in switch-cheats-db. This repository ports it to version 4.0.1.
+Original author of the 60 FPS pchtxt patches for Mario Kart 8 Deluxe: [theboy181](https://linktr.ee/theboy181). The first 60 and 30 FPS cheat was made by halop, from pchtxt ports by Wachee and zix7. It was then updated for later versions by B3711, b0rd2dEAth and Craftyawesome, and their codes are collected in switch-cheats-db. This repository ports it to version 4.0.1.
 
 ## License
 
